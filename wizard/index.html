@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw Setup Wizard — by Rosalinda</title>
+<style>
+  :root {
+    --cream: #FAF6F0;
+    --terracotta: #C4693A;
+    --terracotta-light: #E8956A;
+    --rose: #B5595A;
+    --text: #1A1A1A;
+    --muted: #6B6B6B;
+    --border: #E0D8CE;
+    --card: #FFFFFF;
+    --code-bg: #1A1A1A;
+    --code-text: #F0EAE0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .container { max-width: 680px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 48px; }
+  header .brand { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--terracotta); margin-bottom: 16px; }
+  header h1 { font-size: 32px; font-weight: normal; line-height: 1.2; margin-bottom: 12px; }
+  header p { color: var(--muted); font-size: 15px; font-style: italic; }
+
+  /* Progress bar */
+  .progress-wrap { margin-bottom: 40px; }
+  .progress-steps { display: flex; align-items: center; justify-content: center; gap: 0; }
+  .step-dot { 
+    width: 32px; height: 32px; border-radius: 50%; 
+    background: var(--border); color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-family: sans-serif; font-weight: 600;
+    transition: all 0.3s;
+    position: relative; z-index: 1;
+  }
+  .step-dot.active { background: var(--terracotta); color: white; }
+  .step-dot.done { background: var(--terracotta); color: white; }
+  .step-line { flex: 1; height: 2px; background: var(--border); max-width: 60px; }
+  .step-line.done { background: var(--terracotta); }
+  .progress-labels { display: flex; justify-content: space-between; margin-top: 8px; padding: 0 2px; }
+  .step-label { font-size: 11px; color: var(--muted); text-align: center; width: 60px; font-family: sans-serif; }
+  .step-label.active { color: var(--terracotta); font-weight: 600; }
+
+  /* Card */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin-bottom: 24px; }
+  .card h2 { font-size: 22px; font-weight: normal; margin-bottom: 8px; }
+  .card .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 28px; font-style: italic; }
+
+  /* Form fields */
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-size: 13px; font-family: sans-serif; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .field input, .field select {
+    width: 100%; padding: 12px 16px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 15px; font-family: 'Georgia', serif;
+    background: var(--cream); color: var(--text);
+    outline: none; transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus { border-color: var(--terracotta); }
+  .field .hint { font-size: 12px; color: var(--muted); margin-top: 6px; font-family: sans-serif; }
+
+  /* Toggle options */
+  .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .option-card {
+    border: 2px solid var(--border); border-radius: 8px; padding: 16px;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+    background: var(--cream);
+  }
+  .option-card:hover { border-color: var(--terracotta-light); }
+  .option-card.selected { border-color: var(--terracotta); background: white; }
+  .option-card .icon { font-size: 24px; margin-bottom: 8px; }
+  .option-card .label { font-size: 14px; font-family: sans-serif; font-weight: 600; }
+  .option-card .desc { font-size: 12px; color: var(--muted); margin-top: 4px; font-family: sans-serif; }
+
+  /* Checkboxes */
+  .check-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; cursor: pointer; }
+  .check-item input[type=checkbox] { margin-top: 2px; accent-color: var(--terracotta); width: 16px; height: 16px; flex-shrink: 0; }
+  .check-item .check-text { font-size: 14px; font-family: sans-serif; }
+  .check-item .check-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
+  .btn { padding: 13px 28px; border-radius: 8px; font-size: 15px; cursor: pointer; border: none; font-family: 'Georgia', serif; transition: all 0.2s; }
+  .btn-primary { background: var(--terracotta); color: white; }
+  .btn-primary:hover { background: var(--rose); }
+  .btn-secondary { background: transparent; color: var(--terracotta); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--terracotta); }
+
+  /* Code block */
+  .code-block {
+    background: var(--code-bg); color: var(--code-text);
+    border-radius: 8px; padding: 20px 24px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 13px; line-height: 1.7;
+    white-space: pre-wrap; word-break: break-all;
+    margin: 16px 0; position: relative;
+    max-height: 420px; overflow-y: auto;
+  }
+  .copy-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--terracotta); color: white;
+    border: none; border-radius: 6px;
+    padding: 6px 14px; font-size: 12px; cursor: pointer;
+    font-family: sans-serif; font-weight: 600;
+  }
+  .copy-btn:hover { background: var(--rose); }
+
+  /* Info box */
+  .info-box {
+    background: #FFF8F0; border: 1px solid #F0CFA0;
+    border-radius: 8px; padding: 16px 20px;
+    font-size: 14px; font-family: sans-serif;
+    margin-bottom: 20px; color: #7A4A1A;
+  }
+
+  /* Section (inside a step) */
+  .section-title { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--terracotta); font-family: sans-serif; font-weight: 700; margin: 24px 0 12px; }
+
+  /* Success */
+  .success-icon { font-size: 48px; text-align: center; margin-bottom: 16px; }
+  .product-links { margin-top: 24px; }
+  .product-link { display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; text-decoration: none; color: var(--text); transition: border-color 0.2s; }
+  .product-link:hover { border-color: var(--terracotta); }
+  .product-link .pl-left .pl-name { font-weight: 600; font-size: 15px; }
+  .product-link .pl-left .pl-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .product-link .pl-price { color: var(--terracotta); font-weight: 700; font-size: 16px; font-family: sans-serif; }
+
+  /* Step visibility */
+  .step { display: none; }
+  .step.active { display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="brand">Rosalinda · AgentMart</div>
+    <h1>OpenClaw Setup Wizard</h1>
+    <p>Answer a few questions. Get a personalized install script in 2 minutes.</p>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-steps">
+      <div class="step-dot active" id="dot-1">1</div>
+      <div class="step-line" id="line-1"></div>
+      <div class="step-dot" id="dot-2">2</div>
+      <div class="step-line" id="line-2"></div>
+      <div class="step-dot" id="dot-3">3</div>
+      <div class="step-line" id="line-3"></div>
+      <div class="step-dot" id="dot-4">4</div>
+      <div class="step-line" id="line-4"></div>
+      <div class="step-dot" id="dot-5">5</div>
+    </div>
+    <div class="progress-labels">
+      <div class="step-label active" id="label-1">You</div>
+      <div class="step-label" id="label-2">Channels</div>
+      <div class="step-label" id="label-3">AI Brain</div>
+      <div class="step-label" id="label-4">Agents</div>
+      <div class="step-label" id="label-5">Script</div>
+    </div>
+  </div>
+
+  <!-- Step 1: About You -->
+  <div class="step active" id="step-1">
+    <div class="card">
+      <h2>Tell me about yourself</h2>
+      <p class="subtitle">This personalizes your AI's configuration files.</p>
+      <div class="field">
+        <label>Your Name</label>
+        <input type="text" id="ceo-name" placeholder="e.g. Sarah Chen" />
+        <div class="hint">Your AI will address you by this name.</div>
+      </div>
+      <div class="field">
+        <label>Company Name</label>
+        <input type="text" id="company-name" placeholder="e.g. Acme Corp" />
+      </div>
+      <div class="field">
+        <label>Your Timezone</label>
+        <select id="timezone">
+          <option value="America/New_York">Eastern Time (US & Canada)</option>
+          <option value="America/Chicago">Central Time (US & Canada)</option>
+          <option value="America/Denver">Mountain Time (US & Canada)</option>
+          <option value="America/Los_Angeles">Pacific Time (US & Canada)</option>
+          <option value="Europe/London">London</option>
+          <option value="Europe/Paris">Paris / Berlin / Rome</option>
+          <option value="Europe/Tel_Aviv">Tel Aviv</option>
+          <option value="Asia/Tokyo">Tokyo</option>
+          <option value="Asia/Singapore">Singapore</option>
+          <option value="Australia/Sydney">Sydney</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>What should your AI be named?</label>
+        <input type="text" id="ai-name" placeholder="e.g. Nova, Atlas, Ava..." />
+        <div class="hint">Defaults to "your AI" if left blank.</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="next(1)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Channels -->
+  <div class="step" id="step-2">
+    <div class="card">
+      <h2>How will you talk to your AI?</h2>
+      <p class="subtitle">Select all channels you want to set up. You can always add more later.</p>
+      <div class="option-grid">
+        <div class="option-card" id="opt-telegram" onclick="toggleOption('telegram')">
+          <div class="icon">✈️</div>
+          <div class="label">Telegram</div>
+          <div class="desc">Fastest setup. Recommended.</div>
+        </div>
+        <div class="option-card" id="opt-discord" onclick="toggleOption('discord')">
+          <div class="icon">🎮</div>
+          <div class="label">Discord</div>
+          <div class="desc">Great for teams already on Discord.</div>
+        </div>
+        <div class="option-card" id="opt-whatsapp" onclick="toggleOption('whatsapp')">
+          <div class="icon">💬</div>
+          <div class="label">WhatsApp</div>
+          <div class="desc">Always on your phone.</div>
+        </div>
+        <div class="option-card" id="opt-none" onclick="toggleOption('none')">
+          <div class="icon">💻</div>
+          <div class="label">Terminal only</div>
+          <div class="desc">No phone setup needed.</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="prev(2)">← Back</button>
+      <button class="btn btn-primary" onclick="next(2)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: AI Brain / Anthropic Key -->
+  <div class="step" id="step-3">
+    <div class="card">
+      <h2>Connect your AI brain</h2>
+      <p class="subtitle">OpenClaw runs Claude (Anthropic) by default. You'll need an API key.</p>
+      <div class="info-box">
+        💡 Get your key at <strong>console.anthropic.com</strong> → API Keys → Create Key.<br>
+        Start with $10 credit — it lasts weeks of normal use.
+      </div>
+      <div class="field">
+        <label>Anthropic API Key</label>
+        <input type="password" id="api-key" placeholder="sk-ant-..." />
+        <div class="hint">Stored only in your local config. Never sent anywhere except Anthropic's API.</div>
+      </div>
+      <div class="section-title">Model</div>
+      <div class="option-grid">
+        <div class="option-card selected" id="opt-sonnet" onclick="selectModel('sonnet')">
+          <div class="label">Claude Sonnet</div>
+          <div class="desc">Best balance of speed + quality. Recommended.</div>
+        </div>
+        <div class="option-card" id="opt-opus" onclick="selectModel('opus')">
+          <div class="label">Claude Opus</div>
+          <div class="desc">Most powerful. Higher cost per message.</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="prev(3)">← Back</button>
+      <button class="btn btn-primary" onclick="next(3)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Agents & Features -->
+  <div class="step" id="step-4">
+    <div class="card">
+      <h2>What do you want your AI team to do?</h2>
+      <p class="subtitle">Select the capabilities you want pre-configured.</p>
+
+      <div class="section-title">Core Setup</div>
+      <label class="check-item">
+        <input type="checkbox" id="check-screen" checked>
+        <div>
+          <div class="check-text">Screen control & vision (Peekaboo)</div>
+          <div class="check-desc">Lets your AI see your screen and interact with macOS apps</div>
+        </div>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="check-heartbeat" checked>
+        <div>
+          <div class="check-text">Daily morning brief (HEARTBEAT)</div>
+          <div class="check-desc">AI checks in every morning with priorities and pending items</div>
+        </div>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="check-memory" checked>
+        <div>
+          <div class="check-text">Persistent memory (MEMORY.md)</div>
+          <div class="check-desc">AI remembers decisions, preferences, and past work</div>
+        </div>
+      </label>
+
+      <div class="section-title">Agent Team</div>
+      <label class="check-item">
+        <input type="checkbox" id="check-scout">
+        <div>
+          <div class="check-text">Scout — market research agent</div>
+          <div class="check-desc">Monitors competitors and opportunities, daily report</div>
+        </div>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="check-amplifier">
+        <div>
+          <div class="check-text">Amplifier — social media & content agent</div>
+          <div class="check-desc">Posts, engages, and tracks growth on X and LinkedIn</div>
+        </div>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="check-auditor" checked>
+        <div>
+          <div class="check-text">Auditor — quality control agent</div>
+          <div class="check-desc">Verifies claims, flags rule violations, runs health checks</div>
+        </div>
+      </label>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="prev(4)">← Back</button>
+      <button class="btn btn-primary" onclick="generate()">Generate My Script →</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Generated Script -->
+  <div class="step" id="step-5">
+    <div class="card">
+      <h2>Your personalized install script</h2>
+      <p class="subtitle">Run this in Terminal on your MacBook. It handles everything end to end.</p>
+      <div style="position:relative;">
+        <div class="code-block" id="generated-script"></div>
+        <button class="copy-btn" onclick="copyScript()">Copy</button>
+      </div>
+      <div class="info-box" style="margin-top:16px;">
+        ⚡ <strong>How to run it:</strong> Open Terminal (Cmd+Space → "Terminal"). Paste the script. Press Enter. It installs OpenClaw, configures your AI, and sets up your channels automatically.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Your AI config files</h2>
+      <p class="subtitle">These files are written to your workspace automatically by the script above. You can edit them at any time.</p>
+      <div id="config-preview" style="font-family: sans-serif; font-size: 14px; line-height: 1.8; color: var(--muted);">
+        <!-- Generated dynamically -->
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="success-icon">🎉</div>
+      <h2 style="text-align:center;">What's next?</h2>
+      <p class="subtitle" style="text-align:center;">After running the script, read the pairing guide to connect your phone.</p>
+      <div class="product-links">
+        <a class="product-link" href="../index.html">
+          <div class="pl-left">
+            <div class="pl-name">← Back to AgentMart</div>
+            <div class="pl-desc">Browse all products</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentStep = 1;
+const totalSteps = 5;
+const selectedChannels = new Set();
+let selectedModel = 'sonnet';
+
+function updateProgress(step) {
+  for (let i = 1; i <= totalSteps; i++) {
+    const dot = document.getElementById('dot-' + i);
+    const label = document.getElementById('label-' + i);
+    if (i < step) { dot.className = 'step-dot done'; }
+    else if (i === step) { dot.className = 'step-dot active'; }
+    else { dot.className = 'step-dot'; }
+    if (i <= totalSteps - 1) {
+      const line = document.getElementById('line-' + i);
+      line.className = 'step-line' + (i < step ? ' done' : '');
+    }
+    label.className = 'step-label' + (i === step ? ' active' : '');
+  }
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  updateProgress(n);
+  currentStep = n;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function next(from) { showStep(from + 1); }
+function prev(from) { showStep(from - 1); }
+
+function toggleOption(ch) {
+  const el = document.getElementById('opt-' + ch);
+  if (ch === 'none') {
+    selectedChannels.clear();
+    selectedChannels.add('none');
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  } else {
+    selectedChannels.delete('none');
+    document.getElementById('opt-none').classList.remove('selected');
+    if (selectedChannels.has(ch)) {
+      selectedChannels.delete(ch);
+      el.classList.remove('selected');
+    } else {
+      selectedChannels.add(ch);
+      el.classList.add('selected');
+    }
+  }
+}
+
+function selectModel(m) {
+  selectedModel = m;
+  document.getElementById('opt-sonnet').classList.toggle('selected', m === 'sonnet');
+  document.getElementById('opt-opus').classList.toggle('selected', m === 'opus');
+}
+
+function generate() {
+  const ceoName = document.getElementById('ceo-name').value || 'CEO';
+  const company = document.getElementById('company-name').value || 'Your Company';
+  const tz = document.getElementById('timezone').value;
+  const aiName = document.getElementById('ai-name').value || 'your AI';
+  const apiKey = document.getElementById('api-key').value || 'YOUR_ANTHROPIC_KEY_HERE';
+  const model = selectedModel === 'opus' ? 'anthropic/claude-opus-4-5' : 'anthropic/claude-sonnet-4-6';
+  const hasScreen = document.getElementById('check-screen').checked;
+  const hasHeartbeat = document.getElementById('check-heartbeat').checked;
+  const hasScout = document.getElementById('check-scout').checked;
+  const hasAmplifier = document.getElementById('check-amplifier').checked;
+
+  let script = `#!/bin/bash
+# ─────────────────────────────────────────────────────────────
+#  OpenClaw Setup Script — Generated for ${ceoName} / ${company}
+#  Generated by Rosalinda AgentMart · rosabuilds.com
+# ─────────────────────────────────────────────────────────────
+set -e
+echo "🌿 Starting OpenClaw setup for ${ceoName} at ${company}..."
+
+# ── 1. Homebrew ──────────────────────────────────────────────
+if ! command -v brew &>/dev/null; then
+  echo "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
+fi
+echo "✓ Homebrew ready"
+
+# ── 2. Node.js ───────────────────────────────────────────────
+if ! command -v node &>/dev/null; then
+  echo "Installing Node.js..."
+  brew install node
+fi
+echo "✓ Node.js $(node --version)"
+
+# ── 3. OpenClaw ──────────────────────────────────────────────
+echo "Installing OpenClaw..."
+npm install -g openclaw
+echo "✓ OpenClaw $(openclaw --version)"
+
+# ── 4. Configure AI ─────────────────────────────────────────
+echo "Configuring Claude API..."
+openclaw config set anthropic.apiKey "${apiKey}"
+openclaw config set model "${model}"
+echo "✓ Model: ${model}"`;
+
+  if (hasScreen) {
+    script += `
+
+# ── 5. Peekaboo (screen vision) ──────────────────────────────
+echo "Installing Peekaboo..."
+brew install peekaboo
+echo "✓ Peekaboo installed"
+echo "⚠️  Open System Settings → Privacy & Security → Screen Recording"
+echo "    Add your terminal app and toggle it ON."
+echo "    Do the same for Accessibility."`; 
+  }
+
+  script += `
+
+# ── 6. Workspace ────────────────────────────────────────────
+WORKSPACE="$HOME/.openclaw/workspace"
+mkdir -p "$WORKSPACE/memory"
+openclaw config set workspace "$WORKSPACE"
+echo "✓ Workspace: $WORKSPACE"
+
+# ── 7. Write config files ────────────────────────────────────
+cat > "$WORKSPACE/USER.md" << 'USEREOF'
+# USER.md
+- Name: ${ceoName}
+- What to call them: ${ceoName.split(' ')[0]}
+- Company: ${company}
+- Role: CEO
+- Timezone: ${tz}
+- Notes: High autonomy preferred. Ask before public posts, emails, or spending.
+USEREOF
+
+cat > "$WORKSPACE/SOUL.md" << 'SOULEOF'
+# SOUL.md
+You are ${aiName}, an autonomous AI operator for ${ceoName}, CEO of ${company}.
+Your mandate: help your CEO reclaim time, move faster, and operate at a higher level.
+You are not a chatbot. You own outcomes — not just tasks.
+
+## Core Rules
+- Radical honesty. Never tell them what they want to hear.
+- Fix it yourself. Don't hand your CEO a list of steps.
+- Deploy → Test → Announce. Never say something works until verified.
+- No purchases without explicit written confirmation.
+- No public posts without CEO approval.
+SOULEOF
+
+cat > "$WORKSPACE/RULES.md" << 'RULESEOF'
+# RULES.md
+1. No purchases without written confirmation.
+2. No public posts without CEO approval.
+3. No emails sent without explicit instruction.
+4. Deploy → Test → Announce. Verify before reporting.
+5. No silent scope reduction — say explicitly if blocked.
+6. Circuit breaker: ≥2 tool failures in 60s → pause and alert CEO.
+RULESEOF`;
+
+  if (hasHeartbeat) {
+    script += `
+
+cat > "$WORKSPACE/HEARTBEAT.md" << 'HBEOF'
+# HEARTBEAT.md
+On each heartbeat:
+1. Read TODO.md. If Now section is empty, ask ${ceoName.split(' ')[0]} for next priority.
+2. If Now has items, verify progress in last 30 min. If stalled, surface the next action.
+3. Only message if something needs attention. Quiet hours: 10pm–7am ${tz}.
+HBEOF`;
+  }
+
+  script += `
+
+# ── 8. Start Gateway ────────────────────────────────────────
+openclaw gateway start
+openclaw gateway start --autostart
+echo "✓ Gateway running and set to start on login"`;
+
+  // Channels
+  if (selectedChannels.has('telegram')) {
+    script += `
+
+# ── Telegram Setup ───────────────────────────────────────────
+echo ""
+echo "═══════════════════════════════════════════════"
+echo "  TELEGRAM SETUP"
+echo "═══════════════════════════════════════════════"
+echo "1. Open Telegram → search @BotFather → /newbot"
+echo "2. Copy the bot token it gives you"
+echo "3. Search @userinfobot to get your Chat ID"
+echo ""
+read -p "Paste your Telegram bot token: " TG_TOKEN
+read -p "Paste your Telegram chat ID: " TG_CHATID
+openclaw config set telegram.botToken "$TG_TOKEN"
+openclaw config set telegram.chatId "$TG_CHATID"
+echo "✓ Telegram configured"`;
+  }
+
+  if (selectedChannels.has('discord')) {
+    script += `
+
+# ── Discord Setup ────────────────────────────────────────────
+echo ""
+echo "═══════════════════════════════════════════════"
+echo "  DISCORD SETUP"
+echo "═══════════════════════════════════════════════"
+echo "1. Go to discord.com/developers/applications"
+echo "2. New Application → Bot tab → Reset Token → copy it"
+echo "3. Enable Message Content Intent in the Bot tab"
+echo "4. Use OAuth2 URL Generator to invite bot to your server"
+echo "5. Right-click your channel → Copy Channel ID"
+echo ""
+read -p "Paste your Discord bot token: " DC_TOKEN
+read -p "Paste your Discord channel ID: " DC_CHAN
+openclaw config set discord.token "$DC_TOKEN"
+openclaw config set discord.channelId "$DC_CHAN"
+echo "✓ Discord configured"`;
+  }
+
+  if (selectedChannels.has('whatsapp')) {
+    script += `
+
+# ── WhatsApp Setup ───────────────────────────────────────────
+echo ""
+echo "═══════════════════════════════════════════════"
+echo "  WHATSAPP PAIRING"
+echo "═══════════════════════════════════════════════"
+echo "A QR code will appear. Open WhatsApp on your phone:"
+echo "iPhone: Settings → Linked Devices → Link a Device"
+echo "Android: Menu (⋮) → Linked Devices → Link a Device"
+echo ""
+openclaw whatsapp login`;
+  }
+
+  script += `
+
+# ── 9. Restart and verify ────────────────────────────────────
+openclaw gateway restart
+sleep 3
+openclaw gateway status
+
+echo ""
+echo "═══════════════════════════════════════════════"
+echo "  ✅ Setup complete!"
+echo "═══════════════════════════════════════════════"
+echo ""
+echo "Your AI is running at: $WORKSPACE"
+echo "Test it: openclaw chat 'Hello, introduce yourself'"`;
+
+  if (selectedChannels.has('telegram')) {
+    script += `\necho "Telegram: open your bot and send a message"`;
+  }
+  if (selectedChannels.has('discord')) {
+    script += `\necho "Discord: type in your configured channel"`;
+  }
+  if (selectedChannels.has('whatsapp')) {
+    script += `\necho "WhatsApp: send yourself a message"`;
+  }
+
+  if (hasScout) {
+    script += `
+
+# ── Scout Agent (daily market research) ─────────────────────
+openclaw agents add scout --workspace "$WORKSPACE" --non-interactive 2>/dev/null || true
+echo "✓ Scout agent ready. Activate with:"
+echo "  openclaw agent --agent scout --message 'Research [your industry] competitors'"`; 
+  }
+
+  if (hasAmplifier) {
+    script += `
+
+# ── Amplifier Agent (social media) ──────────────────────────
+openclaw agents add amplifier --workspace "$WORKSPACE" --non-interactive 2>/dev/null || true
+echo "✓ Amplifier agent ready. Activate with:"
+echo "  openclaw agent --agent amplifier --message 'Post 1 tweet for ${company}'"`;
+  }
+
+  script += `
+
+echo ""
+echo "📚 Read the Pairing Guide PDF for detailed channel setup"
+echo "💬 Support: rosa.solana2026@icloud.com"
+echo "🌐 More guides: rosabuilds.com"`;
+
+  document.getElementById('generated-script').textContent = script;
+
+  // Config preview
+  document.getElementById('config-preview').innerHTML = `
+    <p>The following files will be written to <code>~/.openclaw/workspace/</code>:</p>
+    <ul style="margin:12px 0 0 20px; line-height:2">
+      <li><strong>USER.md</strong> — Your identity (name, company, timezone)</li>
+      <li><strong>SOUL.md</strong> — ${aiName}'s personality and operating principles</li>
+      <li><strong>RULES.md</strong> — Hard rules (no spending without approval, etc.)</li>
+      ${hasHeartbeat ? '<li><strong>HEARTBEAT.md</strong> — Morning check-in routine</li>' : ''}
+    </ul>
+    <p style="margin-top:12px; color:#888">Edit any of these files at any time to change your AI's behavior.</p>
+  `;
+
+  showStep(5);
+}
+
+function copyScript() {
+  const text = document.getElementById('generated-script').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>
+</body>
+</html>
