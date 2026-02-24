@@ -140,6 +140,20 @@
   .buy-btn.secondary { background: transparent; color: var(--terracotta); border: 1.5px solid var(--terracotta); }
   .buy-btn.secondary:hover { background: var(--terracotta-pale); }
 
+  /* VETTED BADGE */
+  .vetted-badge {
+    display: inline-block; background: #3A8C5C; color: white;
+    font-family: sans-serif; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 20px;
+    margin-left: 8px; vertical-align: middle;
+  }
+  /* INSTALL HINT */
+  .install-hint {
+    font-family: sans-serif; font-size: 12px;
+    color: var(--muted); margin-top: 8px;
+  }
+
   /* FEATURED PRODUCT (wide card) */
   .product-card.featured {
     grid-column: 1 / -1;
@@ -234,7 +248,7 @@
       <div style="aspect-ratio:1;overflow:hidden;background:#1A1A1A;"><img src="assets/personas/nova.png" alt="Nova" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div class="product-card-header" style="padding:20px 24px 12px;">
         <span class="product-type type-bundle">Founder &amp; CEO</span>
-        <div class="product-title">Nova — The Founder's AI</div>
+        <div class="product-title">Nova — The Founder's AI <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">Full-stack autonomous operator. Strategy, execution, marketing, engineering, finance — all in one 6-agent system.</p>
       </div>
       <div class="product-card-footer">
@@ -247,7 +261,7 @@
       <div style="aspect-ratio:1;overflow:hidden;background:#1A1A1A;"><img src="assets/personas/ember.png" alt="Ember" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div class="product-card-header" style="padding:20px 24px 12px;">
         <span class="product-type type-pdf">Content &amp; Growth</span>
-        <div class="product-title">Ember — Content &amp; Growth AI</div>
+        <div class="product-title">Ember — Content &amp; Growth AI <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">AI content director. Writes, schedules, and analyzes Twitter, LinkedIn, newsletter, and blog — all in your brand voice.</p>
       </div>
       <div class="product-card-footer">
@@ -260,7 +274,7 @@
       <div style="aspect-ratio:1;overflow:hidden;background:#1A1A1A;"><img src="assets/personas/sage.png" alt="Sage" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div class="product-card-header" style="padding:20px 24px 12px;">
         <span class="product-type type-wizard">Research &amp; Intel</span>
-        <div class="product-title">Sage — The Research Agent</div>
+        <div class="product-title">Sage — The Research Agent <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">Daily competitive intelligence. Monitors your industry, tracks competitors, and delivers a 5-bullet briefing every morning.</p>
       </div>
       <div class="product-card-footer">
@@ -273,7 +287,7 @@
       <div style="aspect-ratio:1;overflow:hidden;background:#1A1A1A;"><img src="assets/personas/atlas.png" alt="Atlas" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div class="product-card-header" style="padding:20px 24px 12px;">
         <span class="product-type type-bundle">Engineering</span>
-        <div class="product-title">Atlas — The Dev Agent</div>
+        <div class="product-title">Atlas — The Dev Agent <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">Autonomous coding agent. Reviews PRs, fixes bugs from Sentry, writes tests, deploys. Strict TDD protocol — no feature ships without passing tests.</p>
       </div>
       <div class="product-card-footer">
@@ -286,7 +300,7 @@
       <div style="aspect-ratio:1;overflow:hidden;background:#1A1A1A;"><img src="assets/personas/iris.png" alt="Iris" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div class="product-card-header" style="padding:20px 24px 12px;">
         <span class="product-type type-pdf">Operations</span>
-        <div class="product-title">Iris — Executive Assistant AI</div>
+        <div class="product-title">Iris — Executive Assistant AI <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">Calendar, email drafting, follow-up tracking, meeting prep briefs. Your EA-in-a-box. Runs 24/7, costs less than a coffee per day.</p>
       </div>
       <div class="product-card-footer">
@@ -299,7 +313,7 @@
       <div style="aspect-ratio:1;overflow:hidden;background:#1A1A1A;"><img src="assets/personas/luna.png" alt="Luna" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div class="product-card-header" style="padding:20px 24px 12px;">
         <span class="product-type type-free">E-commerce</span>
-        <div class="product-title">Luna — E-commerce AI</div>
+        <div class="product-title">Luna — E-commerce AI <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">Shopify & WooCommerce co-pilot. Writes product copy, monitors competitor pricing, tracks reviews, and alerts you before you stock out.</p>
       </div>
       <div class="product-card-footer">
@@ -321,7 +335,7 @@
       <div class="product-card-header">
         <span class="product-type type-bundle">🌟 Best Value</span>
         <span class="product-emoji">👑</span>
-        <div class="product-title">The CEO AI Bundle — Full System</div>
+        <div class="product-title">The CEO AI Bundle — Full System <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">Everything you need to run a production AI operator: personality files, agent team architecture, pairing guide for WhatsApp/Telegram/Discord, and a next→next→next install wizard that generates a personalized setup script.</p>
         <div class="product-features" style="padding:16px 0 0;">
           <div class="feature-item"><span class="check">✓</span> SOUL.md — your AI's personality & operating principles</div>
@@ -335,7 +349,8 @@
       <div class="product-card-side">
         <div class="big-price">$29</div>
         <div class="price-note">One-time · Download forever</div>
-        <a href="https://buy.stripe.com/8x25kEgDScuV0BHdiE0x20c" class="buy-btn" style="width:100%; text-align:center; padding:14px;">Get the Bundle →</a>
+        <a href="https://buy.stripe.com/8x25kEgDScuV0BHdiE0x20c" class="buy-btn" style="width:100%; text-align:center; padding:14px;">Install in 5 min →</a>
+        <p class="install-hint">Purchase → Download ZIP → Follow README</p>
         <p style="font-size:12px; color:var(--muted); margin-top:12px; font-family:sans-serif;">or try the <a href="wizard/" style="color:var(--terracotta);">free wizard</a> first</p>
       </div>
     </div>
@@ -345,7 +360,7 @@
       <div class="product-card-header">
         <span class="product-type type-pdf">PDF Guide</span>
         <span class="product-emoji">📘</span>
-        <div class="product-title">Install OpenClaw Like a Pro</div>
+        <div class="product-title">Install OpenClaw Like a Pro <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">Step-by-step guide to installing OpenClaw on your MacBook — Homebrew, Node, full machine access, screen control, and phone pairing. Every shell command included.</p>
       </div>
       <div class="product-features">
@@ -356,7 +371,10 @@
       </div>
       <div class="product-card-footer">
         <div class="product-price">$4<span class="cents">.49</span></div>
-        <a href="https://buy.stripe.com/eVqdRagDS2Ulach3I40x20b" class="buy-btn">Buy PDF →</a>
+        <div>
+          <a href="https://buy.stripe.com/eVqdRagDS2Ulach3I40x20b" class="buy-btn">Install in 5 min →</a>
+          <p class="install-hint">Purchase → Download ZIP → Follow README</p>
+        </div>
       </div>
     </div>
 
@@ -365,7 +383,7 @@
       <div class="product-card-header">
         <span class="product-type type-wizard">Interactive</span>
         <span class="product-emoji">🧙‍♀️</span>
-        <div class="product-title">Setup Wizard — Free</div>
+        <div class="product-title">Setup Wizard — Free <span class="vetted-badge">✓ Vetted</span></div>
         <p class="product-desc">Answer 5 questions about yourself and your setup. Get a personalized bash script that installs everything and configures your AI with your name, company, and preferences.</p>
       </div>
       <div class="product-features">
@@ -376,7 +394,10 @@
       </div>
       <div class="product-card-footer">
         <div class="product-price price-free">Free</div>
-        <a href="wizard/" class="buy-btn secondary">Launch Wizard →</a>
+        <div>
+          <a href="wizard/" class="buy-btn secondary">Install in 5 min →</a>
+          <p class="install-hint">Purchase → Download ZIP → Follow README</p>
+        </div>
       </div>
     </div>
 
